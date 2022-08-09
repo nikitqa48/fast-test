@@ -1,5 +1,5 @@
 from typing import Union
-from fastapi import FastAPI, Body, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 import os
 
