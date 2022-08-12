@@ -1,7 +1,8 @@
 from typing import Union
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile
 from fastapi.security import OAuth2PasswordBearer
 import os
+
 
 
 api_keys = [
@@ -24,6 +25,11 @@ app = FastAPI()
 @app.get("/", dependencies=[Depends(api_key_auth)])
 def read_root():
     return {"Hello": "World"}
+
+
+@app.post('/api/python/test/')
+def check_code(file: UploadFile):
+    pass
 
 
 @app.get("/items/{item_id}")
