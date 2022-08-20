@@ -1,37 +1,23 @@
-from typing import Union
+import subprocess
 from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile
-from fastapi.security import OAuth2PasswordBearer
 import os
-
-
-
-api_keys = [
-    os.environ.get('api_key')
-]
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
-def api_key_auth(api_key: str = Depends(oauth2_scheme)):
-    if api_key not in api_keys:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Forbidden"
-        )
+import shutil
+from middleware import api_key_auth
 
 
 app = FastAPI()
 
 
-@app.get("/", dependencies=[Depends(api_key_auth)])
-def read_root():
-    return {"Hello": "World"}
+@app.post('/api/python/test/', dependencies=[Depends(api_key_auth)])
+def check_code(file: UploadFile = File()):
+    with open(f'test_dir/django/{file.filename}', 'wb') as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    process = subprocess.run(
+        f'pytest -rx test_dir/django/{file.filename}',
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+    os.remove(f'test_dir/django/{file.filename}')
+    return {'result': process}
 
-
-@app.post('/api/python/test/')
-def check_code(file: UploadFile):
-    pass
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
