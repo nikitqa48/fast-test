@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, File, UploadFile
+from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile
 from middleware import api_key_auth
 from models import Docker
 
