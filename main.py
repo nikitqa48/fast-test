@@ -5,9 +5,9 @@ from models import Docker
 app = FastAPI()
 
 
-@app.post('/api/python/test/', dependencies=[Depends(api_key_auth)])
-def check_code(file: UploadFile = File()):
+@app.post('/api/python/test/{name}/', dependencies=[Depends(api_key_auth)])
+def test_code(name: str, file: UploadFile = File()):
     docker = Docker()
     docker.create_testfile(file)
-    docker.run_container('django')
+    docker.run_container(name)
     return {'result': docker.result}
