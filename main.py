@@ -4,7 +4,6 @@ import os
 import shutil
 from middleware import api_key_auth
 
-
 app = FastAPI()
 
 
@@ -13,11 +12,8 @@ def check_code(file: UploadFile = File()):
     with open(f'test_dir/django/{file.filename}', 'wb') as buffer:
         shutil.copyfileobj(file.file, buffer)
     process = subprocess.run(
-        f'pytest -rx test_dir/django/{file.filename}',
+        'docker-compose -f test_dir/django/docker-compose.yml up',
         shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stdout=subprocess.PIPE
     )
-    os.remove(f'test_dir/django/{file.filename}')
     return {'result': process}
-

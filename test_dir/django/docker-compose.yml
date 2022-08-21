@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  web:
+    build: .
+    container_name: test_django
+    command: "pytest -rx django.py"
+    ports:
+      - 8009:8009
+    volumes:
+      - ./:/app
