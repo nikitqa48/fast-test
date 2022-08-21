@@ -13,7 +13,7 @@ class Docker:
 
     def __run_container(self, container: str):
         process = subprocess.run(
-            f'docker-compose -f test_dir/{container}/docker-compose.yml up',
+            f'docker-compose -f test_dir/{container}/docker-compose.yml up -t 30',
             shell=True,
             stdout=subprocess.PIPE
         )
