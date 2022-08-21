@@ -1,10 +1,10 @@
-version: '2'
+version: '3'
 
 services:
   web:
     build: .
     container_name: test_django
-    command: "pytest -rx django.py"
+    command: "pytest -rx test.py"
     ports:
       - 8009:8009
     volumes:
