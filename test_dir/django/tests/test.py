@@ -1,3 +1,3 @@
-string = 'str'ф 
+string = 'str' 
 def test_capital_case():
     assert string == 'str'
