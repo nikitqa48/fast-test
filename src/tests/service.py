@@ -8,7 +8,7 @@ class Docker:
         self.containers = os.listdir('src/tests')
 
     def create_testfile(self, file):
-        with open(f'src/tests/django/tests/test.py', 'wb') as buffer:
+        with open(f'src/tests/django/files/test.py', 'wb') as buffer:
             return shutil.copyfileobj(file.file, buffer)
 
     def __run_container(self, container: str):
@@ -21,7 +21,7 @@ class Docker:
         return process
 
     def run_container(self, name: str):
-        if name in self.containers and os.path.exists(f'src/tests/{name}/tests/test.py'):
+        if name in self.containers and os.path.exists(f'src/tests/{name}/files/test.py'):
             return self.__run_container(name)
 
 
