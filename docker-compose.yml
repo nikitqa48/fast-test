@@ -7,7 +7,7 @@ services:
     image: fast-test
     command: >
       sh -c "service supervisor start && 
-      uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8008"
+      uvicorn config.main:app --reload --workers 1 --host 0.0.0.0 --port 8008"
     ports:
       - 8008:8008
     volumes:

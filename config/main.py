@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile
-from middleware import api_key_auth
-from models import Docker
+from middleware.middleware import api_key_auth
+from src.tests.service import Docker
 
 app = FastAPI()
 
