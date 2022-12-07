@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: test_django
+    command: "python manage.py test"
+#    volumes:
+#      - ./:/app
+    ports:
+      - 8010:8010
+
+    networks:
+    - fast-test_default
+
+networks:
+  fast-test_default:
+    external: true

@@ -11,3 +11,7 @@ def test_code(name: str, file: UploadFile = File()):
     docker.create_testfile(file)
     docker.run_container(name)
     return {'result': docker.result}
+
+
+def deploy_course(url: str):
+    pass

@@ -15,3 +15,5 @@ def api_key_auth(api_key: str = Depends(oauth2_scheme)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Forbidden"
         )
+
+
