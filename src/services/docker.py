@@ -1,15 +1,10 @@
 import subprocess
 import os
-import shutil
 
 
 class Docker:
     def __init__(self):
         self.containers = os.listdir('src/courses')
-
-    def create_testfile(self, file):
-        with open(f'src/courses/django/files/test.py', 'wb') as buffer:
-            return shutil.copyfileobj(file.file, buffer)
 
     def __run_container(self, framework: str, app: str):
         process = subprocess.run(

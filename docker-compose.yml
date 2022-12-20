@@ -1,16 +1,48 @@
 version: "3"
 
+
 services:
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - fast-test_default
+
+  subscriber:
+    build:
+      context: src/services/subscriber
+      dockerfile: ./Dockerfile
+    command: python src/services/subscriber/app.py
+    volumes:
+      - ./:/app
+    depends_on:
+      - redis
+    restart: always
+    container_name: subscriber
+
   api:
     build: ./
     privileged: true
     image: fast-test
     command: >
-      sh -c "service supervisor start && 
-      uvicorn config.main:app --reload --workers 1 --host 0.0.0.0 --port 8008"
+      sh -c "service supervisor start && uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8008"
     ports:
       - 8008:8008
     volumes:
       - ./:/app
+      - /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - .env
+    networks:
+      - fast-test_default
+    depends_on:
+      - redis
+      - subscriber
+
+
+networks:
+  fast-test_default:
+    external: true

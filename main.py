@@ -1,17 +1,6 @@
-from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile
-from middleware.middleware import api_key_auth
-from src.tests.service import Docker
+from fastapi import FastAPI
+from src.router import router
 
 app = FastAPI()
+app.include_router(router)
 
-
-@app.post('/api/python/test/{name}/', dependencies=[Depends(api_key_auth)])
-def test_code(name: str, file: UploadFile = File()):
-    docker = Docker()
-    docker.create_testfile(file)
-    docker.run_container(name)
-    return {'result': docker.result}
-
-
-def deploy_course(url: str):
-    pass
