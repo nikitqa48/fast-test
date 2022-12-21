@@ -15,9 +15,11 @@ services:
     build:
       context: src/services/subscriber
       dockerfile: ./Dockerfile
-    command: python src/services/subscriber/app.py
+    command: >
+      sh -c "service supervisor start && python3 src/services/subscriber/app.py"
     volumes:
       - ./:/app
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - redis
     restart: always
@@ -28,12 +30,11 @@ services:
     privileged: true
     image: fast-test
     command: >
-      sh -c "service supervisor start && uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8008"
+      sh -c "uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8008"
     ports:
       - 8008:8008
     volumes:
       - ./:/app
-      - /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - .env
     networks:
