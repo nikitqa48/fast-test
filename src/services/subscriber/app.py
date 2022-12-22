@@ -1,13 +1,11 @@
 import json
-import redis
+from src.services.redis import redis
 from src.services.folders import FolderService
 from src.services.docker import docker
 
-r = redis.StrictRedis(host='redis', port=6379, db=0, charset="utf-8", decode_responses=True)
-
 
 def subscribe():
-    sub = r.pubsub()
+    sub = redis.pubsub()
     sub.subscribe('user')
     for message in sub.listen():
         data = message.get('data')
@@ -17,6 +15,12 @@ def subscribe():
             folder.write_user_code(data['path'], data['code'])
             docker.run_container(data['framework'], data['app'])
             folder.return_filedata()
+            user_data = {
+                'code': docker.result.returncode,
+                'error': docker.result.stderr.decode(),
+                'output': docker.result.stdout.decode()
+            }
+            redis.publish(data['user_key'], json.dumps(user_data))
 
 
 while True:

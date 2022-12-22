@@ -1,21 +1,24 @@
 import json
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from src.services.redis import redis
 
-from fastapi import APIRouter
-from fastapi import Depends
-from src.middleware import api_key_auth
-from database import models
-from src.services.publish import publish
 test = APIRouter()
 
 
-@test.post('/api/python/test/{name}/', dependencies=[Depends(api_key_auth)])
-def test_code(name: str, item: models.Item):
-    data = json.dumps({'path': item.path, 'code': item.code, 'app': item.app, 'framework': name})
-    publish('user', data)
+@test.websocket('/api/python/test/{framework}/')
+async def test_code(websocket: WebSocket, framework: str):
+    await websocket.accept()
 
-    # r.set('user', item.json())
-    # service = FolderService(name, item.app)
-    # service.write_user_code(item.path, item.code)
-    # docker.run_container(name, item.app)
-    # service.return_filedata()
-    # return {'result': docker.result}
+    while True:
+        try:
+            data = await websocket.receive_json()
+            data['framework'], data['user_key'] = framework, str(websocket)
+            redis.publish('user', json.dumps(data))
+            message = redis.subscribe(str(websocket))
+            await websocket.send_json(message)
+        except WebSocketDisconnect:
+            print("Client disconnected")
+        except RuntimeError:
+            break
+
+

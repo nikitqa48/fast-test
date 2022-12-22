@@ -30,7 +30,8 @@ services:
     privileged: true
     image: fast-test
     command: >
-      sh -c "uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8008"
+      sh -c "uvicorn main:app --workers 1 --host 0.0.0.0 --port 8008"
+    #убрать --reload
     ports:
       - 8008:8008
     volumes:

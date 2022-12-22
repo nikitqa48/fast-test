@@ -10,6 +10,7 @@ class Docker:
         process = subprocess.run(
             f'docker-compose -f src/courses/{framework}/{app}/docker-compose.yml run web python manage.py test',
             shell=True,
+            stderr=subprocess.PIPE,
             stdout=subprocess.PIPE
         )
         self.result = process
