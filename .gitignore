@@ -9,6 +9,7 @@ __pycache__/
 *.so
 .git
 # Distribution / packaging
+.DS_Store
 .Python
 env/
 build/
